@@ -1,0 +1,80 @@
+#! /usr/bin/env node
+
+require('console-ultimate/global').replace();
+
+var read = (function ()
+{
+	var fsReadFileSync = require('fs').readFileSync;
+
+	return function read (filename)
+	{
+		return fsReadFileSync(filename, 'utf-8');
+	}
+})();
+
+var output = (function ()
+{
+	function dir (ast)
+	{
+		console.dir(ast, Infinity);
+	}
+
+	var dump = (function ()
+	{
+		var _dump = JSON.stringify;
+
+		return function dump (ast)
+		{
+			return _dump(ast, null, '  ');
+		}
+	})();
+
+	function okJson (ast)
+	{
+		write(dump(ast));
+	}
+
+	function errorJson (error)
+	{
+		writeErr(dump(error));
+	}
+
+	function write (chunk)
+	{
+		process.stdout.write(chunk + '\n');
+	}
+	function writeErr (chunk)
+	{
+		process.stderr.write(chunk + '\n');
+	}
+
+	if (process.stdout.isTTY)
+	{
+		return {
+			ok: dir,
+			error: console.error
+		}
+	}
+	else
+	{
+		return {
+			ok: okJson,
+			error: errorJson
+		}
+	}
+
+})();
+
+var parser = require('../src/parser');
+
+var program = read(process.argv[2] || 'example.ang');
+
+try
+{
+	var ast = parser.parse(program);
+	output.ok(ast);
+}
+catch (error)
+{
+	output.error(error);
+}
