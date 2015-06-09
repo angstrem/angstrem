@@ -17,6 +17,19 @@
 	{
 		return [].concat(node[0], node[1]).join('');
 	});
+
+	var angNumber = construct('Number', function (node)
+	{
+		var base;
+
+		base = node[1].join('');
+		base = parseInt(base, '10');
+		if (node[0] === '-')
+		{
+			base *= -1;
+		}
+		return base;
+	});
 }
 
 program
@@ -24,4 +37,5 @@ program
 
 //= ./expr.pegjs
 //= ./id.pegjs
+//= ./numeric.pegjs
 //= ./space.pegjs
