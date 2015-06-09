@@ -18,7 +18,7 @@ var program = read(process.argv[2] || 'example.ang');
 
 try
 {
-	console.dir(parser.parse(program));
+	console.dir(parser.parse(program), Infinity);
 }
 catch (e)
 {
