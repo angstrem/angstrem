@@ -1,5 +1,7 @@
 
 {
+	var strip = require('./strip-ast');
+
 	function angIdentifier (rule)
 	{
 		var id = [].concat(rule[0], rule[1]).join('');
@@ -9,7 +11,7 @@
 }
 
 program
-  = expression
+  = expression:expression { return strip(expression) }
 
 expression
   = expression_with_delimiter * expression_single
