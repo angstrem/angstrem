@@ -1,0 +1,4 @@
+#! /bin/sh
+
+npm run peg
+run/ast ${@}
