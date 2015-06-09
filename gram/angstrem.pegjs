@@ -35,7 +35,7 @@ spaces
   = space +
 
 space
-  = [ \n\t]
+  = [ \n\r\t]
 
 nothing
   = ""
