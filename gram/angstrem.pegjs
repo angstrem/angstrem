@@ -3,23 +3,20 @@
 	var strip = require('./strip-ast');
 	var flat = require('lodash.flattendeep');
 
-	function angExpression (rule)
+	function angExpression (node)
 	{
-		rule = strip(rule);
-		rule = flat(rule);
+		node = strip(node);
+		node = flat(node);
 
-		return rule;
+		return node;
 	}
 
-	function angIdentifier (rule)
-	{
-		var id = [].concat(rule[0], rule[1]).join('');
+	var construct = require('./construct');
 
-		return {
-			type: "Identifier",
-			data: id
-		}
-	}
+	var angIdentifier = construct('Identifier', function (node)
+	{
+		return [].concat(node[0], node[1]).join('');
+	});
 }
 
 program
