@@ -48,6 +48,35 @@
 		}
 		return base;
 	});
+
+	var angComment = construct('Comment', function (node)
+	{
+		var
+			type = node[0],
+			body = node.slice(1);
+
+		switch (type)
+		{
+		case '//':
+			type = 'line';
+			body = body.slice(0, -1);
+			break;
+
+		case '/*':
+			type = 'block';
+			body = body.slice(0, -3);
+			break;
+		}
+
+		body = body[0];
+
+		body = body.join('');
+
+		return {
+			type: type,
+			body: body
+		}
+	});
 }
 
 program
