@@ -13,6 +13,14 @@
 
 	var construct = require('./construct');
 
+	var angExpressionAssignment = construct('ExpressionAssignment', function (node)
+	{
+		return {
+			left:  node[0],
+			right: node[4]
+		}
+	});
+
 	var angExpressionBinary = construct('ExpressionBinary', function (node)
 	{
 		return {
