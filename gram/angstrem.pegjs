@@ -1,6 +1,6 @@
 
 program
-  = identifier
+  = space identifier space
 
 identifier
   = identifier_first identifier_succedent *
@@ -14,3 +14,6 @@ identifier_first
 
 identifier_almost_any
   = ([a-z]i / "@" / "$" / "_" / "?")
+
+space
+  = " " / "\n" / "\t"
