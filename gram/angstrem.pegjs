@@ -1,17 +1,29 @@
 
 {
 	var strip = require('./strip-ast');
+	var flat = require('lodash.flattendeep');
+
+	function angExpression (rule)
+	{
+		rule = strip(rule);
+		rule = flat(rule);
+
+		return rule;
+	}
 
 	function angIdentifier (rule)
 	{
 		var id = [].concat(rule[0], rule[1]).join('');
 
-		return [ "Identifier", id ];
+		return {
+			type: "Identifier",
+			data: id
+		}
 	}
 }
 
 program
-  = expression:expression { return strip(expression) }
+  = expression:expression { return angExpression(expression) }
 
 expression
   = expression_with_delimiter * expression_single
@@ -28,7 +40,7 @@ expression_delimiter
   = ";"
 
 identifier
-  = identifier: (identifier_first identifier_succedent *) { return angIdentifier(identifier); }
+  = identifier: (identifier_first identifier_succedent *) { return angIdentifier(identifier) }
 
 identifier_succedent
   = [01-9]
