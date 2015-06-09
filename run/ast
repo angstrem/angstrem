@@ -2,6 +2,8 @@
 
 require('console-ultimate/global').replace();
 
+var inputOrFile = require('../src/cli-util/input-or-file');
+
 var read = (function ()
 {
 	var fsReadFileSync = require('fs').readFileSync;
@@ -67,14 +69,15 @@ var output = (function ()
 
 var parser = require('../src/parser');
 
-var program = read(process.argv[2] || 'example.ang');
-
-try
+inputOrFile(process.argv[2] || 'example.ang', function (program)
 {
-	var ast = parser.parse(program);
-	output.ok(ast);
-}
-catch (error)
-{
-	output.error(error);
-}
+	try
+	{
+		var ast = parser.parse(program);
+		output.ok(ast);
+	}
+	catch (error)
+	{
+		output.error(error);
+	}
+});

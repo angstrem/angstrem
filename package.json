@@ -22,6 +22,8 @@
 
   "dependencies":
   {
+    "concat-stream": "^1.4.8",
+
     "pegjs":  "^0.8",
     "rigger": "^0.5.10",
 
