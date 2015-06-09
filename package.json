@@ -13,7 +13,11 @@
   "bugs":       { "url": "https://github.com/angstrem/angstrem/issues" },
 
   "main": "src/",
-  "scripts": {},
+
+  "scripts":
+  {
+    "peg": "pegjs gram/angstrem.pegjs parser.js"
+  },
 
   "dependencies":
   {
