@@ -28,14 +28,14 @@ identifier_first
   = identifier_almost_any
 
 identifier_almost_any
-  = ([a-z]i / "@" / "$" / "_" / "?")
+  = ([a-z]i / [@$_?])
 
 
 spaces
   = space +
 
 space
-  = " " / "\n" / "\t"
+  = [ \n\t]
 
 nothing
   = ""
