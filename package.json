@@ -14,5 +14,9 @@
 
   "main": "src/",
   "scripts": {},
-  "dependencies": {}
+
+  "dependencies":
+  {
+    "pegjs": "^0.8"
+  }
 }
