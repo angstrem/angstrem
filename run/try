@@ -1,0 +1,26 @@
+#! /usr/bin/env node
+
+require('console-ultimate/global').replace();
+
+var read = (function ()
+{
+	var fsReadFileSync = require('fs').readFileSync;
+
+	return function read (filename)
+	{
+		return fsReadFileSync(filename, 'utf-8');
+	}
+})();
+
+var parser = require('../parser');
+
+var program = read(process.argv[2] || 'example.ang');
+
+try
+{
+	console.dir(parser.parse(program));
+}
+catch (e)
+{
+	console.error(e);
+}

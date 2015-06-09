@@ -16,11 +16,14 @@
 
   "scripts":
   {
-    "peg": "pegjs gram/angstrem.pegjs parser.js"
+    "peg": "pegjs gram/angstrem.pegjs parser.js",
+    "try": "run/try ${@}"
   },
 
   "dependencies":
   {
-    "pegjs": "^0.8"
+    "pegjs": "^0.8",
+
+    "console-ultimate": "^2.7"
   }
 }
