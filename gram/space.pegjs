@@ -1,6 +1,6 @@
 
 spaces
-  = space +
+  = space+
 
 space
   = [ \n\r\t]

@@ -13,6 +13,16 @@
 
 	var construct = require('./construct');
 
+	var angExpressionBinary = construct('ExpressionBinary', function (node)
+	{
+		return {
+			operator: node[2],
+
+			left:  node[0],
+			right: node[4]
+		}
+	});
+
 	var angIdentifier = construct('Identifier', function (node)
 	{
 		return [].concat(node[0], node[1]).join('');
