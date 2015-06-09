@@ -12,7 +12,7 @@ var read = (function ()
 	}
 })();
 
-var parser = require('../parser');
+var parser = require('../src/parser');
 
 var program = read(process.argv[2] || 'example.ang');
 
