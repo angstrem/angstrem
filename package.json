@@ -16,7 +16,7 @@
 
   "scripts":
   {
-    "peg": "pegjs gram/angstrem.pegjs src/parser/parser.js",
+    "peg": "run/peg",
     "try": "run/try ${@}"
   },
 
