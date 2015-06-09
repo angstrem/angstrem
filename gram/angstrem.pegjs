@@ -37,7 +37,7 @@ expression_single
   / nothing
 
 expression_delimiter
-  = ";"
+  = ";" { return }
 
 identifier
   = identifier: (identifier_first identifier_succedent *) { return angIdentifier(identifier) }
