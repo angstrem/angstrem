@@ -1,4 +1,13 @@
 
+{
+	function angIdentifier (rule)
+	{
+		var id = [].concat(rule[0], rule[1]).join('');
+
+		return [ "Identifier", id ];
+	}
+}
+
 program
   = expression
 
@@ -16,9 +25,8 @@ expression_single
 expression_delimiter
   = ";"
 
-
 identifier
-  = identifier_first identifier_succedent *
+  = identifier: (identifier_first identifier_succedent *) { return angIdentifier(identifier); }
 
 identifier_succedent
   = [01-9]
