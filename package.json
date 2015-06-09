@@ -16,7 +16,7 @@
 
   "scripts":
   {
-    "peg": "run/peg",
+    "peg": "run/.peg",
     "try": "run/try ${@}"
   },
 
