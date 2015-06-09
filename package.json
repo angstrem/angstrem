@@ -25,11 +25,13 @@
   {
     "concat-stream": "^1.4.8",
 
+    "console-ultimate": "^2.7"
+  },
+  "devDependencies":
+  {
     "pegjs":  "^0.8",
     "rigger": "^0.5.10",
 
-    "lodash.flattendeep": "^3.0.2",
-
-    "console-ultimate": "^2.7"
+    "lodash.flattendeep": "^3.0.2"
   }
 }
