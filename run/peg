@@ -1,3 +1,3 @@
 #! /bin/sh
 
-pegjs gram/angstrem.pegjs src/parser/parser.js
+rig gram/angstrem.pegjs | pegjs > src/parser/parser.js

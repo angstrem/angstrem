@@ -22,7 +22,9 @@
 
   "dependencies":
   {
-    "pegjs": "^0.8",
+    "pegjs":  "^0.8",
+    "rigger": "^0.5.10",
+
     "lodash.flattendeep": "^3.0.2",
 
     "console-ultimate": "^2.7"
