@@ -16,8 +16,9 @@
 
   "scripts":
   {
-    "peg": "run/.peg",
-    "try": "run/try ${@}"
+    "peg":  "run/.peg",
+    "try":  "run/try ${@}",
+    "eval": "run/ast | run/eval"
   },
 
   "dependencies":
