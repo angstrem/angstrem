@@ -6,11 +6,12 @@ var load = JSON.parse;
 
 var inputOrFile = require('../src/cli-util/input-or-file');
 
-var Eval = require('../src/runtime/Eval');
+var Frame = require('../src/runtime/Frame');
 
 inputOrFile(process.argv[2], function (ast)
 {
 	ast = load(ast);
 
-	Eval(ast, process);
+	var frame = new Frame(ast);
+	frame.run();
 });
