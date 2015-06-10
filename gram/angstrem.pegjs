@@ -83,6 +83,7 @@ program
   = expression:expression { return angExpression(expression) }
 
 //= ./expr.pegjs
+//= ./fn.pegjs
 //= ./id.pegjs
 //= ./numeric.pegjs
 //= ./space.pegjs

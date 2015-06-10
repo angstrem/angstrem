@@ -9,3 +9,8 @@ x = 1;
 x = 5 + 7;
 // lololo
 /* abc */ z = 5; /* abc */
+
+out(1 + 2);
+out();
+out( );
+out(in());

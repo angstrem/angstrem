@@ -40,7 +40,8 @@ operator
 
 // atomic
 expression_atomic
-  = identifier
+  = function_call
+  / identifier
   / number
 
 
