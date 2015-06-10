@@ -10,11 +10,11 @@ module.exports = function construct (id, fnTransform)
 		fn = function (node) { return node }
 	}
 
-	var constructor = function AstConstructor (node)
+	var constructor = function AstConstructor ()
 	{
 		return {
 			type: id,
-			data: fn(node)
+			data: fn.apply(this, arguments)
 		}
 	}
 

@@ -31,22 +31,16 @@
 		}
 	});
 
-	var angFunctionCall = construct('FunctionCall', function (node)
+	var angFunctionCall = construct('FunctionCall', function (name, args)
 	{
-		var name = node[0].data;
+		name = name.data;
 
-		var body = node.slice(3, -1);
-
-		body = strip(body);
-		body = flat(body);
-
-		//body = body.filter(Boolean);
-
-		//console.dir(node, Infinity);
+		args = flat(args);
+		args = strip(args);
 
 		return {
 			name: name,
-			args: body
+			args: args
 		}
 	});
 
