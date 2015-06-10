@@ -31,6 +31,25 @@
 		}
 	});
 
+	var angFunctionCall = construct('FunctionCall', function (node)
+	{
+		var name = node[0].data;
+
+		var body = node.slice(3, -1);
+
+		body = strip(body);
+		body = flat(body);
+
+		//body = body.filter(Boolean);
+
+		//console.dir(node, Infinity);
+
+		return {
+			name: name,
+			args: body
+		}
+	});
+
 	var angIdentifier = construct('Identifier', function (node)
 	{
 		return [].concat(node[0], node[1]).join('');

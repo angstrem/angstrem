@@ -2,16 +2,15 @@
 
 
 function_call
-  = identifier spaces? "(" function_call_args ")"
+  = fn:(identifier spaces? "(" function_call_args ")") { return angFunctionCall(fn) }
 
 function_call_args
   = function_call_arglist
-  / function_call_arg
   / spaces
   / nothing
 
 function_call_arglist
-  = (spaces? function_call_arg spaces? function_call_arg_delimiter)* spaces? function_call_arg
+  = (spaces? function_call_arg spaces? function_call_arg_delimiter)* spaces? function_call_arg spaces?
 
 function_call_arg_delimiter
   = ","
