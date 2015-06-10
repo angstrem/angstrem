@@ -35,7 +35,7 @@ expression_assignment
   { return angExpressionAssignment(expr) }
 
 operator
-  = "+" / "-" / "*" / "/" / "//" / "%" / "**"
+  = "+" / "-" / "*" / "/" / "div" / "mod" / "**"
 
 
 // atomic
