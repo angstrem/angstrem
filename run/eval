@@ -1,8 +1,16 @@
 #! /usr/bin/env node
 
+require('console-ultimate/global').replace();
+
+var load = JSON.parse;
+
 var inputOrFile = require('../src/cli-util/input-or-file');
+
+var Eval = require('../src/runtime/Eval');
 
 inputOrFile(process.argv[2], function (ast)
 {
-	process.stdout.write(ast);
+	ast = load(ast);
+
+	Eval(ast, process);
 });
