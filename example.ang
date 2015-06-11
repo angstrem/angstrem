@@ -1,5 +1,6 @@
 
-x = in();
-y = in();
+x = in(); /* block */
+y = in(); /*block*/
 
-out(x + y);
+out(x + y); // line
+//line
