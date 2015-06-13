@@ -2,14 +2,7 @@
 {
 	var strip = require('./strip-ast');
 	var flat = require('lodash.flattendeep');
-
-	function angExpression (node)
-	{
-		node = strip(node);
-		node = flat(node);
-
-		return node;
-	}
+	var ast = require('./ast');
 
 	var construct = require('./construct');
 
@@ -92,7 +85,7 @@
 }
 
 program
-  = expression:expression { return angExpression(expression) }
+  = expression:expression { return ast.Expression(expression) }
 
 //= ./expr.pegjs
 //= ./fn.pegjs
