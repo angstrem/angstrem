@@ -8,4 +8,5 @@ module.exports =
 	ExpressionBinary: require('./ExpressionBinary'),
 	FunctionCall: require('./FunctionCall'),
 	Comment: require('./Comment'),
+	Identifier: require('./Identifier'),
 }

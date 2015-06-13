@@ -1,13 +1,6 @@
 
 {
 	var ast = require('./ast');
-
-	var construct = require('./construct');
-
-	var angIdentifier = construct('Identifier', function (node)
-	{
-		return [].concat(node[0], node[1]).join('');
-	});
 }
 
 program

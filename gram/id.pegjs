@@ -1,6 +1,6 @@
 
 identifier
-  = identifier: (identifier_first identifier_succedent *) { return angIdentifier(identifier) }
+  = identifier: (identifier_first identifier_succedent *) { return ast.Identifier(identifier) }
 
 identifier_succedent
   = [01-9]
