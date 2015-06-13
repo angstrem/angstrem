@@ -9,4 +9,5 @@ module.exports =
 	FunctionCall: require('./FunctionCall'),
 	Comment: require('./Comment'),
 	Identifier: require('./Identifier'),
+	String: require('./String'),
 }

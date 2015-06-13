@@ -43,6 +43,7 @@ expression_atomic
   = function_call
   / identifier
   / number
+  / string
 
 
 expression_delimiter

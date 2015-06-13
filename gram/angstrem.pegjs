@@ -9,5 +9,6 @@ program
 //= ./expr.pegjs
 //= ./fn.pegjs
 //= ./id.pegjs
+//= ./string.pegjs
 //= ./numeric.pegjs
 //= ./space.pegjs
