@@ -7,4 +7,5 @@ module.exports =
 	Assignment: require('./Assignment'),
 	ExpressionBinary: require('./ExpressionBinary'),
 	FunctionCall: require('./FunctionCall'),
+	Comment: require('./Comment'),
 }
