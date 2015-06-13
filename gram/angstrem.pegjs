@@ -6,19 +6,6 @@
 
 	var construct = require('./construct');
 
-	var angFunctionCall = construct('FunctionCall', function (name, args)
-	{
-		name = name.data;
-
-		args = flat(args);
-		args = strip(args);
-
-		return {
-			name: name,
-			args: args
-		}
-	});
-
 	var angIdentifier = construct('Identifier', function (node)
 	{
 		return [].concat(node[0], node[1]).join('');

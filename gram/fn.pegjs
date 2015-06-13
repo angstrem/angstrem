@@ -2,7 +2,7 @@
 
 
 function_call
-  = name:identifier spaces? "(" args:function_call_args ")" { return angFunctionCall(name, args) }
+  = name:identifier spaces? "(" args:function_call_args ")" { return ast.FunctionCall(name, args) }
 
 function_call_args
   = function_call_arglist
