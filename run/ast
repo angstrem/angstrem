@@ -69,7 +69,7 @@ var output = (function ()
 
 var parser = require('../src/parser');
 
-inputOrFile(process.argv[2] || 'example.ang', function (program)
+inputOrFile(process.argv[2] || 'examples/example.ang', function (program)
 {
 	try
 	{
