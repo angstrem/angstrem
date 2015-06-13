@@ -78,6 +78,8 @@ instr.ExpressionBinary = function (data)
 	}
 }
 
+instr.Comment = function () {}
+
 var core = {};
 
 core.fn = {};
