@@ -3,5 +3,6 @@
 
 module.exports =
 {
-	Expression: require('./Expression')
+	Expression: require('./Expression'),
+	Assignment: require('./Assignment')
 }

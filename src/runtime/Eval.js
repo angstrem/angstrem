@@ -22,7 +22,7 @@ module.exports = function Eval (frame)
 
 var instr = {};
 
-instr.ExpressionAssignment = function (data)
+instr.Assignment = function (data)
 {
 	var id = data.left.data;
 	var right = this.eval(data.right);

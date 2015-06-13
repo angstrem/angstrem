@@ -32,7 +32,7 @@ expression_binary_generic
 
 expression_assignment
   = expr:(identifier spaces? "=" spaces? expression_strict)
-  { return angExpressionAssignment(expr) }
+  { return ast.Assignment(expr) }
 
 operator
   = "+" / "-" / "*" / "/" / "div" / "mod" / "**"
