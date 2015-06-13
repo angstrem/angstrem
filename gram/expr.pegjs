@@ -28,7 +28,7 @@ expression_binary
 
 expression_binary_generic
   = expr:(expression_atomic spaces? operator spaces? expression_strict)
-  { return angExpressionBinary(expr) }
+  { return ast.ExpressionBinary(expr) }
 
 expression_assignment
   = expr:(identifier spaces? "=" spaces? expression_strict)

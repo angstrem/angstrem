@@ -6,16 +6,6 @@
 
 	var construct = require('./construct');
 
-	var angExpressionBinary = construct('ExpressionBinary', function (node)
-	{
-		return {
-			operator: node[2],
-
-			left:  node[0],
-			right: node[4]
-		}
-	});
-
 	var angFunctionCall = construct('FunctionCall', function (name, args)
 	{
 		name = name.data;
