@@ -44,6 +44,11 @@ instr.Identifier = function (data)
 	}
 }
 
+instr.String = function (data)
+{
+	return data;
+}
+
 instr.FunctionCall = function (data)
 {
 	var name = data.name;
