@@ -89,9 +89,9 @@ var core = {};
 
 core.fn = {};
 
-core.fn.in = function ()
+core.fn.in = function (label)
 {
-	return readline.question('input some stuff: ');
+	return readline.question(label || 'input some stuff: ');
 }
 core.fn.out = function (data)
 {
