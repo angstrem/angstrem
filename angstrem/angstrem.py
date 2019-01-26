@@ -1,4 +1,4 @@
 
-from grammar.grammar import grammar
+from .grammar.grammar import grammar
 
 print(grammar())
