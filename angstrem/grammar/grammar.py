@@ -1,10 +1,11 @@
 
-from os.path import dirname
-from os.path import join
+
+from ..rootpath import rootpath_from as rootpath
+
+root = rootpath(__file__)
 
 def read (*path):
-	full = join(dirname(__file__), *path)
-	full = full + '.peg'
+	full = root(*path) + '.peg'
 
 	return open(full).read()
 
