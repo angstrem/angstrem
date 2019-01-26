@@ -1,0 +1,6 @@
+
+main = stmt *
+
+stmt = word ";"
+
+word = ~"\w+"
