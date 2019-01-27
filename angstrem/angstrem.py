@@ -18,21 +18,29 @@ print(1, ast)
 
 
 from parsimonious.nodes import NodeVisitor
+from parsimonious.nodes import Node
 
-visitor = NodeVisitor()
-visitor.grammar = angstrem
+class Visitor (NodeVisitor):
+	def __init__ (self):
+		self.grammar = angstrem
 
-def noop (*_): pass
+	def generic_visit (self, node, children):
+		node = Node(node.expr, node.full_text, node.start, node.end)
+		node.children = children
+		return node
 
-def v (node, children):
-	print(node.expr.name, node.text)
-	print(node.match)
-	print('---')
-	# return '000',
+	def visit_word (self, node, children):
+	# def visit_stmt (self, node, children):
+		print(node.expr.name, node.text)
+		print('match' in node and node.match)
+		print(children)
+		print('---')
+		# return ''
+		return node
 
-visitor.generic_visit = noop
-visitor.visit_word = v
+visitor = Visitor()
 
-visitor.visit(ast)
+ast2 = visitor.visit(ast)
 
-print(2, ast)
+print(1, ast)
+print(2, ast2)
