@@ -14,7 +14,7 @@ example = open(root('example/example')).read()
 
 
 ast = angstrem.parse(example)
-print(1, ast)
+print('AST', ast)
 
 
 from parsimonious.nodes import NodeVisitor
@@ -25,22 +25,19 @@ class Visitor (NodeVisitor):
 		self.grammar = angstrem
 
 	def generic_visit (self, node, children):
-		node = Node(node.expr, node.full_text, node.start, node.end)
-		node.children = children
 		return node
 
+	def visit_main (self, node, children):
+		return children
+
+	def visit_stmt (self, node, children):
+		return children[0]
+
 	def visit_word (self, node, children):
-	# def visit_stmt (self, node, children):
-		print(node.expr.name, node.text)
-		print('match' in node and node.match)
-		print(children)
-		print('---')
-		# return ''
-		return node
+		return node.text
 
 visitor = Visitor()
 
 ast2 = visitor.visit(ast)
 
-print(1, ast)
-print(2, ast2)
+print('R', ast2)
