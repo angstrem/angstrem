@@ -1,4 +1,14 @@
 
-fn main (x) x + 1
+fn main (x, y, z)
+{
+	x + 1
+	y + 2;
+	z + 3
+}
 
-fn foo (y, z) y + z
+fn foo (y, z) {
+
+	y + z
+}
+
+fn bar () {}
