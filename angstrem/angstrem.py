@@ -31,7 +31,7 @@ from lark import Token, Tree
 def vis (node, depth = 0):
 	def name (node):
 		if isinstance(node, Token):
-			return '. {}'.format(node.type)
+			return '. {} {}'.format(node.type, node)
 		if isinstance(node, Tree):
 			return '= {}'.format(node.data)
 
@@ -42,4 +42,6 @@ def vis (node, depth = 0):
 			vis(n, depth + 1)
 
 
+print(example)
+print('---')
 vis(ast)
