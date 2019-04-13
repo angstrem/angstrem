@@ -8,7 +8,7 @@ stmt: decl
 
 decl_func: "fn" _SP ID _SP? "(" _SP? func_args? ")" _SP? func_body
 
-func_args: ( ID _SP? ( "," _SP? ID _SP? )* )?
+func_args: ID _SP? ( "," _SP? ID _SP? )*
 
 func_body: expr
 
