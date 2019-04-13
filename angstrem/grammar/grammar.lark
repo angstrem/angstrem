@@ -1,10 +1,9 @@
 
-main: SP? expr SP?
+main: _SP? expr _SP?
 
 expr: NUMBER
-    | NUMBER SP? "+" SP? expr
+    | NUMBER _SP? "+" _SP? expr
 
 NUMBER: /\d+/
 
-SP: SPACE+
-SPACE: /\s/m
+_SP: /\s+/m
