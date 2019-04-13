@@ -1,8 +1,24 @@
 
-main: _SP? expr _SP?
+main: _SP? stmt _SP?
 
-expr: NUMBER
-    | NUMBER _SP? "+" _SP? expr
+stmt: decl
+    | expr
+
+?decl: decl_func
+
+decl_func: "fn" _SP ID _SP? "(" _SP? func_args? ")" func_body
+
+func_args: ( ID _SP? ( "," _SP? ID _SP? )* )?
+
+func_body: _SP? expr
+
+expr: atom
+    | atom _SP? "+" _SP? expr
+
+?atom: NUMBER
+     | ID
+
+ID: /\w+(\w|\d|_)*/
 
 NUMBER: /\d+/
 
