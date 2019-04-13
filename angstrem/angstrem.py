@@ -14,6 +14,7 @@ example = open(root('example/example')).read()
 
 
 ast = angstrem.parse(example)
-print('AST', ast)
-print('---')
-print('AST', ast.pretty())
+
+print(ast.data)
+print(ast.children)
+print(ast.meta)
