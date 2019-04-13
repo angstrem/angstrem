@@ -6,11 +6,11 @@ stmt: decl
 
 ?decl: decl_func
 
-decl_func: "fn" _SP ID _SP? "(" _SP? func_args? ")" func_body
+decl_func: "fn" _SP ID _SP? "(" _SP? func_args? ")" _SP? func_body
 
 func_args: ( ID _SP? ( "," _SP? ID _SP? )* )?
 
-func_body: _SP? expr
+func_body: expr
 
 expr: atom
     | atom _SP? "+" _SP? expr
