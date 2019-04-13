@@ -1,8 +1,8 @@
 
 main: _SP? ( stmt _SP? )*
 
-stmt: decl
-    | expr
+?stmt: decl
+     | expr
 
 ?decl: decl_func
 
@@ -12,15 +12,15 @@ func_args: ID _SP? ( "," _SP? ID _SP? )*
 
 func_body: expr
 
-expr: atom
-    | atom _SP? "+" _SP? expr
-    | block
+?expr: atom
+     | atom _SP? "+" _SP? expr -> plus
+     | block
 
-block: "{" _SP? block_body? "}"
+block: "{" _SP? _block_body? "}"
 
-block_body: expr _SP? ( block_delim _SP? expr _SP? )*
+_block_body: expr _SP? ( _BLOCK_DELIM _SP? expr _SP? )*
 
-block_delim: ";" | "\n"
+_BLOCK_DELIM: ";" | "\n"
 
 ?atom: NUMBER
      | ID
