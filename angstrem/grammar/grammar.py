@@ -1,18 +1,32 @@
 
 
-from ..rootpath import rootpath_from as rootpath
+# from ..rootpath import rootpath_from as rootpath
 
-root = rootpath(__file__)
+# root = rootpath(__file__)
 
-def read (*path):
-	full = root(*path) + '.peg'
+# def read (*path):
+# 	full = root(*path) + '.peg'
 
-	return open(full).read()
+# 	return open(full).read()
 
 
-from parsimonious.grammar import Grammar
+# from parsimonious.grammar import Grammar
+
+# def grammar ():
+# 	peg = read('grammar')
+
+# 	return Grammar(peg)
+
+
+from lark import Lark
+
 
 def grammar ():
-	peg = read('grammar')
+	return Lark('''
+	main: SP? NUMBER SP?
 
-	return Grammar(peg)
+	NUMBER: /\d+/
+
+	SP: SPACE+
+	SPACE: /\s/m
+	''', start='main')
