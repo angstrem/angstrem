@@ -1,0 +1,7 @@
+
+main: SP? NUMBER SP?
+
+NUMBER: /\d+/
+
+SP: SPACE+
+SPACE: /\s/m
