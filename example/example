@@ -1,2 +1,4 @@
 
 fn main (x) x + 1
+
+fn foo (y, z) y + z
