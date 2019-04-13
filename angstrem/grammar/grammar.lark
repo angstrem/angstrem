@@ -1,5 +1,8 @@
 
-main: SP? NUMBER SP?
+main: SP? expr SP?
+
+expr: NUMBER
+    | NUMBER SP? "+" SP? expr
 
 NUMBER: /\d+/
 
