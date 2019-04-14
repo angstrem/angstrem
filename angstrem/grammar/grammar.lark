@@ -15,6 +15,7 @@ func__body: expr
 ?expr: atom
      | binary
      | call
+     | let
      | block
 //     | group
 
@@ -31,6 +32,8 @@ call: ID _SP? "(" _SP? call__args? ")"
 call__args: expr _SP? ( "," _SP? expr _SP? )*
 
 // group: "(" _SP? ( expr _SP? )? ")"
+
+let: "let" _SP? "(" _SP? ID _SP? "=" _SP? expr _SP? ")" _SP? expr
 
 block: "{" _SP? _block__body? "}"
 
