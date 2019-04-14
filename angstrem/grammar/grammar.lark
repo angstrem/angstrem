@@ -22,7 +22,9 @@ binary: expr _SP? binary__operator _SP? expr
 
 ?binary__operator: "&&" -> and
                  | "||" -> or
+                 | "in" -> in
                  | "+"  -> plus
+                 | "*"  -> mul
 
 call: ID _SP? "(" _SP? call__args? ")"
 
