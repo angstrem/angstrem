@@ -15,14 +15,14 @@ func__body: expr
 ?expr: atom
      | expr _SP? "+" _SP? expr -> plus
      | call
-     | group
      | block
+//     | group
 
 call: ID _SP? "(" _SP? call__args? ")"
 
 call__args: expr _SP? ( "," _SP? expr _SP? )*
 
-group: "(" _SP? ( expr _SP? )? ")"
+// group: "(" _SP? ( expr _SP? )? ")"
 
 block: "{" _SP? _block__body? "}"
 
