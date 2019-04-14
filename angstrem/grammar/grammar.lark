@@ -13,10 +13,16 @@ func__args: ID _SP? ( "," _SP? ID _SP? )*
 func__body: expr
 
 ?expr: atom
-     | expr _SP? "+" _SP? expr -> plus
+     | binary
      | call
      | block
 //     | group
+
+binary: expr _SP? binary__operator _SP? expr
+
+?binary__operator: "&&" -> and
+                 | "||" -> or
+                 | "+"  -> plus
 
 call: ID _SP? "(" _SP? call__args? ")"
 

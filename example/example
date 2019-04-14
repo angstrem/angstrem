@@ -1,14 +1,5 @@
 
 fn main (x, y, z)
 {
-	{ x + 1 } + y
+	{ x + 1 } && { x + 2 } || x + 3
 }
-
-fn foo (y, z) {
-
-	y + z
-}
-
-fn bar () {}
-
-main(1, 2 + 3, bar())
