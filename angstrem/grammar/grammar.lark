@@ -1,5 +1,5 @@
 
-main: _SP? ( stmt _SP? )*
+main: _SP? ( stmt _SP? _DELIM _SP? )*
 
 ?stmt: decl
      | expr
@@ -23,9 +23,9 @@ call__args: expr _SP? ( "," _SP? expr _SP? )*
 
 block: "{" _SP? _block__body? "}"
 
-_block__body: expr _SP? ( _BLOCK_DELIM _SP? expr _SP? )*
+_block__body: expr _SP? ( _DELIM _SP? expr _SP? )*
 
-_BLOCK_DELIM: ";" | "\n"
+_DELIM: ";" | "\n"
 
 ?atom: NUMBER
      | ID
