@@ -12,3 +12,5 @@ fn foo (y, z) {
 }
 
 fn bar () {}
+
+main(1, 2 + 3, bar())

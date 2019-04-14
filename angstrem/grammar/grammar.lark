@@ -14,7 +14,12 @@ func_body: expr
 
 ?expr: atom
      | atom _SP? "+" _SP? expr -> plus
+     | call
      | block
+
+call: ID _SP? "(" _SP? call_args? ")"
+
+call_args: expr _SP? ( "," _SP? expr _SP? )*
 
 block: "{" _SP? _block_body? "}"
 
