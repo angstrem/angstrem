@@ -4,26 +4,26 @@ main: _SP? ( stmt _SP? )*
 ?stmt: decl
      | expr
 
-?decl: decl_func
+?decl: decl__func
 
-decl_func: "fn" _SP ID _SP? "(" _SP? func_args? ")" _SP? func_body
+decl__func: "fn" _SP ID _SP? "(" _SP? func__args? ")" _SP? func__body
 
-func_args: ID _SP? ( "," _SP? ID _SP? )*
+func__args: ID _SP? ( "," _SP? ID _SP? )*
 
-func_body: expr
+func__body: expr
 
 ?expr: atom
      | atom _SP? "+" _SP? expr -> plus
      | call
      | block
 
-call: ID _SP? "(" _SP? call_args? ")"
+call: ID _SP? "(" _SP? call__args? ")"
 
-call_args: expr _SP? ( "," _SP? expr _SP? )*
+call__args: expr _SP? ( "," _SP? expr _SP? )*
 
-block: "{" _SP? _block_body? "}"
+block: "{" _SP? _block__body? "}"
 
-_block_body: expr _SP? ( _BLOCK_DELIM _SP? expr _SP? )*
+_block__body: expr _SP? ( _BLOCK_DELIM _SP? expr _SP? )*
 
 _BLOCK_DELIM: ";" | "\n"
 
