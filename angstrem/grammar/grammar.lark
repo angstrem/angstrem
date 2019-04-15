@@ -17,6 +17,7 @@ func__body: expr
      | call
      | let
      | block
+     | comment
 //     | group
 
 binary: expr _SP? binary__operator _SP? expr
@@ -40,6 +41,12 @@ block: "{" _SP? _block__body? "}"
 _block__body: expr _SP? ( _DELIM _SP? expr _SP? )*
 
 _DELIM: ";" | "\n"
+
+comment: COMMENT__LINE
+       | COMMENT__BLOCK
+
+COMMENT__LINE:  "//" /[^\n]/*
+COMMENT__BLOCK: "/*" /.*/ "*/"
 
 ?atom: NUMBER
      | ID
