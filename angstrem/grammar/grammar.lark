@@ -51,7 +51,7 @@ COMMENT__BLOCK: /\/\*.*\*\//s
 ?atom: NUMBER
      | ID
 
-ID: /\w+(\w|\d|_)*/
+ID: /[A-Za-z]+/
 
 NUMBER: /\d+/
 
