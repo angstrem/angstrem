@@ -10,5 +10,6 @@ fn main (x, y, z)
 
 	// comment
 
-	/* comment */
+	/* comment
+	*/
 }

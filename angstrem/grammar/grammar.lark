@@ -46,7 +46,7 @@ comment: COMMENT__LINE
        | COMMENT__BLOCK
 
 COMMENT__LINE:  "//" /[^\n]/*
-COMMENT__BLOCK: "/*" /.*/ "*/"
+COMMENT__BLOCK: /\/\*.*\*\//s
 
 ?atom: NUMBER
      | ID
