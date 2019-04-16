@@ -1,5 +1,5 @@
 
-main: _SP? ( stmt _SP? _DELIM _SP? )*
+main: _SP? ( stmt ( _SP? _DELIM _SP? stmt )* _SP? ( _DELIM _SP? )? )?
 
 ?stmt: decl
      | expr
