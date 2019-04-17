@@ -17,12 +17,14 @@ func__body: expr
      | call
      | block
      | binary
-     | assign
      | atom
      | comment
+//     | assign
 //     | group
 
 // group: "(" _SP? ( expr _SP? )? ")"
+// assign: ID _SP? "=" _SP? expr
+
 
 for: "for" _SP? "(" _SP? ID _SP "in" _SP expr _SP? ")" _SP? expr
 
@@ -43,8 +45,6 @@ BINARY__OPERATOR: "&&"
                 | "in"
                 | "+"
                 | "*"
-
-assign: ID _SP? "=" _SP? expr
 
 ?atom: NUMBER
      | ID
