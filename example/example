@@ -1,20 +1,10 @@
 
-fn main (x, y, z)
+fn main ()
 {
-	{ 1 in x } && { x + 2 } || x * 3
-
-	let (x = 1)
+	let (x = input())
 	{
-		{ x + 1 } * { x + 2}
-	}
+		x = x * 2
 
-	// comment
-
-	/* comment
-	*/
-
-	for (x in L)
-	{
-		x + 1
+		output(x)
 	}
 }

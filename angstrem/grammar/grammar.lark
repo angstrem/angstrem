@@ -17,6 +17,7 @@ func__body: expr
      | call
      | block
      | binary
+     | assign
      | atom
      | comment
 //     | group
@@ -50,6 +51,8 @@ comment: COMMENT__LINE
 
 COMMENT__LINE:  "//" /[^\n]/*
 COMMENT__BLOCK: /\/\*.*\*\//s
+
+assign: ID _SP? "=" _SP? expr
 
 ?atom: NUMBER
      | ID
