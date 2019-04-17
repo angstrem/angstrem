@@ -12,11 +12,12 @@ func__args: ID _SP? ( "," _SP? ID _SP? )*
 
 func__body: expr
 
-?expr: atom
-     | binary
-     | call
+?expr: for
      | let
+     | call
      | block
+     | binary
+     | atom
      | comment
 //     | group
 
@@ -35,6 +36,8 @@ call__args: expr _SP? ( "," _SP? expr _SP? )*
 // group: "(" _SP? ( expr _SP? )? ")"
 
 let: "let" _SP? "(" _SP? ID _SP? "=" _SP? expr _SP? ")" _SP? expr
+
+for: "for" _SP? "(" _SP? ID _SP "in" _SP expr _SP? ")" _SP? expr
 
 block: "{" _SP? _block__body? "}"
 
