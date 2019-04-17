@@ -45,6 +45,7 @@ BINARY__OPERATOR: "&&"
                 | "in"
                 | "+"
                 | "*"
+                | ">>"
 
 ?atom: NUMBER
      | ID
