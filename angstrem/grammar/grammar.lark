@@ -22,6 +22,20 @@ func__body: expr
      | comment
 //     | group
 
+// group: "(" _SP? ( expr _SP? )? ")"
+
+for: "for" _SP? "(" _SP? ID _SP "in" _SP expr _SP? ")" _SP? expr
+
+let: "let" _SP? "(" _SP? ID _SP? "=" _SP? expr _SP? ")" _SP? expr
+
+call: ID _SP? "(" _SP? call__args? ")"
+
+call__args: expr _SP? ( "," _SP? expr _SP? )*
+
+block: "{" _SP? _block__body? "}"
+
+_block__body: expr _SP? ( _DELIM _SP? expr _SP? )*
+
 binary: expr _SP? BINARY__OPERATOR _SP? expr
 
 BINARY__OPERATOR: "&&"
@@ -29,28 +43,6 @@ BINARY__OPERATOR: "&&"
                 | "in"
                 | "+"
                 | "*"
-
-call: ID _SP? "(" _SP? call__args? ")"
-
-call__args: expr _SP? ( "," _SP? expr _SP? )*
-
-// group: "(" _SP? ( expr _SP? )? ")"
-
-let: "let" _SP? "(" _SP? ID _SP? "=" _SP? expr _SP? ")" _SP? expr
-
-for: "for" _SP? "(" _SP? ID _SP "in" _SP expr _SP? ")" _SP? expr
-
-block: "{" _SP? _block__body? "}"
-
-_block__body: expr _SP? ( _DELIM _SP? expr _SP? )*
-
-_DELIM: ";" | "\n"
-
-comment: COMMENT__LINE
-       | COMMENT__BLOCK
-
-COMMENT__LINE:  "//" /[^\n]/*
-COMMENT__BLOCK: /\/\*.*\*\//s
 
 assign: ID _SP? "=" _SP? expr
 
@@ -61,5 +53,13 @@ ID: /[A-Za-z]+/
   | "_"
 
 NUMBER: /\d+/
+
+comment: COMMENT__LINE
+       | COMMENT__BLOCK
+
+COMMENT__LINE:  "//" /[^\n]/*
+COMMENT__BLOCK: /\/\*.*\*\//s
+
+_DELIM: ";" | "\n"
 
 _SP: /\s+/m
