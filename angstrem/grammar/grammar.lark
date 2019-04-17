@@ -22,13 +22,13 @@ func__body: expr
      | comment
 //     | group
 
-binary: expr _SP? binary__operator _SP? expr
+binary: expr _SP? BINARY__OPERATOR _SP? expr
 
-?binary__operator: "&&" -> and
-                 | "||" -> or
-                 | "in" -> in
-                 | "+"  -> plus
-                 | "*"  -> mul
+BINARY__OPERATOR: "&&"
+                | "||"
+                | "in"
+                | "+"
+                | "*"
 
 call: ID _SP? "(" _SP? call__args? ")"
 
