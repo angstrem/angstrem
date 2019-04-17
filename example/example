@@ -1,10 +1,5 @@
 
 fn main ()
 {
-	let (x = input())
-	{
-		x = x * 2
-
-		output(x)
-	}
+	_ + 1
 }

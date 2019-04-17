@@ -58,6 +58,7 @@ assign: ID _SP? "=" _SP? expr
      | ID
 
 ID: /[A-Za-z]+/
+  | "_"
 
 NUMBER: /\d+/
 
