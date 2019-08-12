@@ -1,0 +1,20 @@
+
+Model: stmt *= Stmt;
+Stmt: Decl | Expr;
+Decl: Decl__Func;
+
+Decl__Func: 'fn' ID '(' Func__Args? ')' Func__Body;
+Func__Args: ID ( ',' ID )*;
+Func__Body: Expr;
+
+Expr:
+	Block | Comment;
+
+Block: '{' Block__Body? '}';
+Block__Body: Expr ( Delimiter Expr )* ;
+
+Delimiter: ';' | '\n';
+
+Comment: Comment__Line | Comment__Block;
+Comment__Line: /\/\/.*$/;
+Comment__Block: /\/\*.*?\*\//;
