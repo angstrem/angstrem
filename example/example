@@ -1,7 +1,7 @@
 
 fn main ()
 {
-	2 >> { _ * 2 } >> output(_) ~> output
+	// 2 >> { _ * 2 } >> output(_) ~> output
 	//
-	2 >> _ * 2 >> output(_) ~> output
+	// 2 >> _ * 2 >> output(_) ~> output
 }

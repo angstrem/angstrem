@@ -9,13 +9,11 @@ root = rootpath(root())
 from .grammar.grammar import grammar
 angstrem = grammar()
 
-
 example = open(root('example/example')).read()
+ast = angstrem.model_from_str(example)
 
-
-ast = angstrem.parse(example)
-
-# print(ast)
+print(ast)
+exit()
 
 # print(ast.data)
 # print(ast.children)
