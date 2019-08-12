@@ -1,5 +1,5 @@
 
-fn main ()
+fn main (x, y)
 {
 	// 2 >> { _ * 2 } >> output(_) ~> output
 	//

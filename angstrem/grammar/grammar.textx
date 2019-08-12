@@ -3,8 +3,8 @@ Model: stmt *= Stmt;
 Stmt: Decl | Expr;
 Decl: Decl__Func;
 
-Decl__Func: 'fn' ID '(' Func__Args? ')' Func__Body;
-Func__Args: ID ( ',' ID )*;
+Decl__Func: 'fn' ID '(' Func__Args ')' Func__Body;
+Func__Args: ID* [','];
 Func__Body: Expr;
 
 Expr:
