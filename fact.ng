@@ -1,0 +1,21 @@
+
+fn main
+	; print (fact 5)
+
+	{ 5 ->
+		fact
+		print
+
+
+fn fact num
+	if {num == 0} 1
+		{num * (fact {num - 1})}
+
+
+;fn fact
+;	type t: num
+;	num: t
+;	-> t
+;
+;	if {num == 0} 1
+;		{num * (fact {num - 1
