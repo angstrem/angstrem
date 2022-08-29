@@ -1,6 +1,7 @@
 #![allow(unused_parens)]
 #![allow(non_snake_case)]
 #![allow(non_upper_case_globals)]
+
 // #[allow(dead_code)]
 
 use std::env::current_dir;
@@ -20,11 +21,7 @@ fn main ()
 	let file = File::open(filename).unwrap();
 	let input = BufReader::new(file);
 
-	for d in parse(input)
-	{
-		// println!("{:?}", r);
-		println!("{}{}", "→".repeat(d.depth), d.value);
-	}
+	let node = parse(input);
 
-	println!(".");
+	println!("{:#?}", node.nested);
 }
