@@ -1,4 +1,11 @@
 
+fn main
+	; print (fact 5)
+
+	{ 5 ->
+		fact
+		print
+
 fn fact num
 	if {num == 0} 1
 		{num * (fact {num - 1})}
@@ -10,9 +17,14 @@ fn fact num
 ;	-> t
 ;
 ;	if {num == 0} 1
+;	if [num == 0] 1
+
 ;	if (num `==` 0) 1
 ;	if (num :==: 0) 1
+
 ;		{num * (fact {num - 1})}
 ;		{num * (fact {num - 1
 ;		(num :*: (fact (num `-` 1
 ;		(num `*` (fact (num `-` 1
+;		[num * (fact [num - 1])]
+;		[num * (fact [num - 1
