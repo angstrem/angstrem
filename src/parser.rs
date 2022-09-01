@@ -3,18 +3,26 @@ use std::io::BufRead;
 
 use nom::IResult;
 // use nom::error::Error;
+use nom::error::ParseError;
 
+use nom::character::complete::space0;
 use nom::character::complete::space1;
 use nom::character::complete::alpha1;
 use nom::character::complete::alphanumeric1;
+use nom::character::complete::digit1;
 
 use nom::bytes::complete::tag;
 
-use nom::branch::alt;
+use nom::sequence::preceded;
+use nom::sequence::delimited;
+use nom::sequence::terminated;
+
 use nom::sequence::pair;
 use nom::multi::many0;
 use nom::multi::separated_list0;
 
+use nom::branch::alt;
+use nom::combinator::opt;
 use nom::combinator::recognize;
 use nom::combinator::map;
 
@@ -23,6 +31,7 @@ use nom::combinator::map;
 enum Node
 {
 	String(String),
+	Number(i32),
 	List(Vec<Node>),
 }
 
@@ -30,12 +39,43 @@ type Result <'S> = IResult<&'S str, Node>;
 
 pub fn parse (_input: impl BufRead) -> ()
 {
-	let foo = "a1bcd_d b1 c2 _d_d";
-	// let foo = "a1bcd_d (b c) d";
+	let foo = "a_1bcd_d (b1 c2) 123 _d (x 1";
 
-	// println!("{:#?}", p_id(foo));
-	// println!("{:#?}", p_id("bar1"));
+	println!("{:#?}\n", foo);
 	println!("{:#?}", p_list_naked(foo));
+}
+
+fn p_form (input: &str) -> Result
+{
+	let p = alt((
+		p_list,
+		p_id,
+		p_num,
+	));
+	let mut p = p;
+
+	p(input)
+}
+
+fn p_list (input: &str) -> Result
+{
+	let p = preceded
+	(
+		tag("("),
+		ws(p_list_naked),
+	);
+	let p = terminated(p, opt(tag(")")));
+	let mut p = p;
+
+	p(input)
+}
+
+fn p_list_naked (input: &str) -> Result
+{
+	let p = separated_list0(space1, p_form);
+	let mut p = map(p, Node::List);
+
+	p(input)
 }
 
 fn p_id (input: &str) -> Result
@@ -51,24 +91,26 @@ fn p_id (input: &str) -> Result
 	p(input)
 }
 
-fn p_list_naked (input: &str) -> Result
+fn p_num (input: &str) -> Result
 {
-	// let open = tag("(");
-	// let close = tag(")");
-
-	let p = separated_list0(space1, p_id);
-	let mut p = map(p, Node::List);
+	let p = digit1;
+	let p = recognize(p);
+	let p = map(p, |s: &str| Node::Number(s.parse().unwrap())); // map_res
+	let mut p = p;
 
 	p(input)
 }
 
-/*
-pub fn parse(input: &str) -> IResult<&str, &str> {
-  recognize(
-    pair(
-      alt((alpha1, tag("_"))),
-      many0_count(alt((alphanumeric1, tag("_"))))
-    )
-  )(input)
+fn ws <'a, F: 'a, O, E> (inner: F)
+	-> impl FnMut(&'a str) -> IResult<&'a str, O, E>
+	where
+	E: ParseError<&'a str>,
+	F: Fn(&'a str) -> IResult<&'a str, O, E>,
+{
+	delimited
+	(
+		space0,
+		inner,
+		space0,
+	)
 }
-*/
