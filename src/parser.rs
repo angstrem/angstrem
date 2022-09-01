@@ -1,217 +1,74 @@
 
-use std::io;
-// use std::io::BufRead as Buf;
-use std::io::Read;
-use std::io::ErrorKind;
+use std::io::BufRead;
 
-use char_reader::CharReader as Reader;
+use nom::IResult;
+// use nom::error::Error;
 
-mod node;
-use node::Node;
+use nom::character::complete::space1;
+use nom::character::complete::alpha1;
+use nom::character::complete::alphanumeric1;
 
-mod pos;
-use pos::Pos;
+use nom::bytes::complete::tag;
 
+use nom::branch::alt;
+use nom::sequence::pair;
+use nom::multi::many0;
+use nom::multi::separated_list0;
 
-#[derive(Debug)]
-enum Next <T>
-{
-	Value(T),
-	Eof,
-	Err(io::Error),
-}
-
-impl <T> From<Next<T>> for io::Result<T>
-{
-	fn from (next: Next<T>) -> Self
-	{
-		match next
-		{
-			Next::Err(error)
-			 => Err(error),
-			Next::Eof
-			 => Err(ErrorKind::UnexpectedEof.into()),
-			Next::Value(value)
-			 => Ok(value),
-		}
-	}
-}
-
-
-struct Context <R: Read>
-{
-	depth: usize,
-	pos: Pos,
-	reader: Reader<R>,
-}
-
-impl <R: Read> Context<R>
-{
-	fn new (reader: Reader<R>) -> Context<R>
-	{
-		Context
-		{
-			depth: 0,
-			pos: Pos::new(),
-			reader,
-		}
-	}
-
-	fn peek (&mut self) -> Next<char>
-	{
-		let next = self.reader.peek_char();
-
-		if let Err(error) = next
-		{
-			return Next::Err(error);
-		}
-
-		let next = next.unwrap();
-
-		if next.is_none()
-		{
-			return Next::Eof;
-		}
-
-		let ch = next.unwrap();
-		Next::Value(ch)
-	}
-
-	fn read (&mut self) -> Next<char>
-	{
-		let next = self.peek();
-
-		if let Next::Value(ch) = next
-		{
-			self.reader.next_char().unwrap();
-
-			self.pos.advance(ch);
-		}
-
-		next
-	}
-}
-
-
-pub fn parse (input: impl Read) -> io::Result<Node>
-{
-	let reader = Reader::new(input);
-	let mut context = Context::new(reader);
-
-	parse_module(&mut context)
-}
-
-
-fn parse_module (context: &mut Context<impl Read>) -> io::Result<Node>
-{
-	let root: Node = "".into();
-	// let mut root: Node = "".into();
-	// let mut sibl: Option<Node> = None;
-
-	loop
-	{
-		let line = parse_line(context);
-
-		let line = match line
-		{
-			Next::Err(error) => return Err(error),
-			Next::Eof => break,
-			Next::Value(line) => line,
-		};
-
-		println!("{:?} {:?}", context.pos, line);
-	}
-
-	Ok(root)
-}
+use nom::combinator::recognize;
+use nom::combinator::map;
 
 
 #[derive(Debug)]
-struct Line
+enum Node
 {
-	depth: usize,
-	node: Node,
+	String(String),
+	List(Vec<Node>),
 }
 
-fn parse_line (context: &mut Context<impl Read>) -> Next<Line>
+type Result <'S> = IResult<&'S str, Node>;
+
+pub fn parse (_input: impl BufRead) -> ()
 {
-	let depth = parse_ident(context);
-	let depth = match depth
-	{
-		Next::Value(depth)
-		 => depth,
-		Next::Eof
-		 => return Next::Eof,
-		Next::Err(error)
-		 => return Next::Err(error),
-	};
+	let foo = "a1bcd_d b1 c2 _d_d";
+	// let foo = "a1bcd_d (b c) d";
 
-	let node = parse_node(context);
-	let node = match node
-	{
-		Next::Value(node)
-		 => node,
-		Next::Eof
-		 => return Next::Eof,
-		Next::Err(error)
-		 => return Next::Err(error),
-	};
-
-	let line = Line { depth, node };
-
-	Next::Value(line)
+	// println!("{:#?}", p_id(foo));
+	// println!("{:#?}", p_id("bar1"));
+	println!("{:#?}", p_list_naked(foo));
 }
 
-
-fn parse_ident (context: &mut Context<impl Read>) -> Next<usize>
+fn p_id (input: &str) -> Result
 {
-	let mut ident = 0usize;
+	let p = pair
+	(
+		alt((alpha1, tag("_"))),
+		many0(alt((alphanumeric1, tag("_")))),
+	);
+	let p = recognize(p);
+	let mut p = map(p, |s: &str| Node::String(s.into()));
 
-	loop
-	{
-		let next = context.peek();
-
-		let ch = match next
-		{
-			Next::Value(ch) => ch,
-			Next::Eof => break,
-			Next::Err(error) => return Next::Err(error),
-		};
-
-		match ch
-		{
-			' ' | '\t' => ident = (ident + 1),
-			_ => break,
-		}
-
-		context.read();
-	}
-
-	Next::Value(ident)
+	p(input)
 }
 
-
-fn parse_node (context: &mut Context<impl Read>) -> Next<Node>
+fn p_list_naked (input: &str) -> Result
 {
-	let mut value = String::new();
+	// let open = tag("(");
+	// let close = tag(")");
 
-	loop
-	{
-		let next = context.read();
+	let p = separated_list0(space1, p_id);
+	let mut p = map(p, Node::List);
 
-		let ch = match next
-		{
-			Next::Value(ch) => ch,
-			Next::Eof => return Next::Eof,
-			Next::Err(error) => return Next::Err(error),
-		};
-
-		match ch
-		{
-			'\n' => break,
-			_ => value.push(ch),
-		}
-	}
-
-	Next::Value(Node::new(value))
+	p(input)
 }
+
+/*
+pub fn parse(input: &str) -> IResult<&str, &str> {
+  recognize(
+    pair(
+      alt((alpha1, tag("_"))),
+      many0_count(alt((alphanumeric1, tag("_"))))
+    )
+  )(input)
+}
+*/
