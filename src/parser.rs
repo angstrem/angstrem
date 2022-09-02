@@ -4,8 +4,9 @@
 use std::io::BufRead;
 
 use nom::IResult;
-// use nom::error::Error;
 use nom::error::ParseError;
+// use nom::error::Error;
+// use nom::Err;
 
 use nom::character::complete::space0;
 use nom::character::complete::space1;
@@ -60,31 +61,29 @@ type List = list::List<Form>;
 type ResultOf <'S, T> = IResult<&'S str, T>;
 type Result <'S> = ResultOf<'S, List>;
 
-pub fn parse (_input: impl BufRead)// -> List
+pub fn parse (input: impl BufRead) -> ()
 {
-	// let mut root = List::root();
-	// let parse_node_context = ParseNodeContext::new(&mut root);
-
-	/*
-	input
+	let lines = input
 	.lines()
 	.map(|line| line.unwrap())
-	.enumerate()
-	.map(|(n, line)| (n + 1, line))
-	.filter(|(_, line)| { line.len() > 0 })
-	.map(p_line)
-	*/
+	.filter(|line| line.len() > 0)
+	.map(p_line);
+	// .collect();
 	// .fold(parse_node_context, parse_node);
 
-	let foo = "\t\t A1 1 (B1? B2!) C-1 (D1 2 ; abc def";
+	// let foo = "\t\t A1 1 (B1? B2!) C-1 (D1 2 ; abc def".to_string();
+	// println!("{:#?}\n", foo);
+	// println!("{:#?}", p_line(foo).unwrap());
 
-	println!("{:#?}\n", foo);
-	println!("{:#?}", p_line(foo).unwrap().1);
+	for line in lines
+	{
+		println!("{:#?}", line);
+	}
 
-	// root
+	// println!("{},\n {:#?}", lines.len(), lines);
 }
 
-fn p_line (input: &str) -> ResultOf<Line>
+fn p_line (input: String) -> std::result::Result<Line, ()>
 {
 	let p = pair
 	(
@@ -96,7 +95,11 @@ fn p_line (input: &str) -> ResultOf<Line>
 	let p = map(p, |(depth, list)| Line { depth, list });
 	let mut p = p;
 
-	p(input)
+	match p(&input)
+	{
+		Err(_) => Err(()), // TODO: Err
+		Ok((_, line)) => Ok(line),
+	}
 }
 
 fn p_indent (input: &str) -> ResultOf<usize>
@@ -152,7 +155,7 @@ fn p_list_naked (input: &str) -> Result
 
 fn p_id (input: &str) -> Result
 {
-	let whitelist = "_-~!@#$%&?*";
+	let whitelist = "_-~!@#$%&?*+=<>";
 	let p = pair
 	(
 		alt((alpha1, recognize(one_of(whitelist)))),
