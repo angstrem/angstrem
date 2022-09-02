@@ -1,5 +1,4 @@
-// TODO: line trailing backslash
-// TODO: modes? lisp compat
+// TODO: rm
 
 use std::io::BufRead;
 

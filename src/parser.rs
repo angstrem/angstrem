@@ -1,3 +1,5 @@
+// TODO: ? line trailing backslash
+// TODO: ? modes? lisp compat
 
 use std::io::BufRead;
 
@@ -26,23 +28,49 @@ use nom::combinator::opt;
 use nom::combinator::recognize;
 use nom::combinator::map;
 
+mod list;
 
 #[derive(Debug)]
-enum Node
+enum Literal
 {
-	String(String),
 	Number(i32),
-	List(Vec<Node>),
+	// String(String),
+	// Boolean(bool),
 }
 
-type Result <'S> = IResult<&'S str, Node>;
-
-pub fn parse (_input: impl BufRead) -> ()
+#[derive(Debug)]
+enum Form
 {
-	let foo = "a_1bcd_d (b1 c2) 123 _d (x 1";
+	Literal(Literal),
+	Id(String),
+}
+
+type List = list::List<Form>;
+
+type Result <'S> = IResult<&'S str, List>;
+
+pub fn parse (_input: impl BufRead)// -> List
+{
+	// let mut root = List::root();
+	// let parse_node_context = ParseNodeContext::new(&mut root);
+
+	/*
+	input
+	.lines()
+	.map(|line| line.unwrap())
+	.enumerate()
+	.map(|(n, line)| (n + 1, line))
+	.filter(|(_, line)| { line.len() > 0 })
+	.map(p_line)
+	*/
+	// .fold(parse_node_context, parse_node);
+
+	let foo = "A1 1 (B1 B2) C1 (D1 2";
 
 	println!("{:#?}\n", foo);
-	println!("{:#?}", p_list_naked(foo));
+	println!("{:#?}", p_list_naked(foo).unwrap().1);
+
+	// root
 }
 
 fn p_form (input: &str) -> Result
@@ -73,7 +101,7 @@ fn p_list (input: &str) -> Result
 fn p_list_naked (input: &str) -> Result
 {
 	let p = separated_list0(space1, p_form);
-	let mut p = map(p, Node::List);
+	let mut p = map(p, List::from_vec);
 
 	p(input)
 }
@@ -86,7 +114,7 @@ fn p_id (input: &str) -> Result
 		many0(alt((alphanumeric1, tag("_")))),
 	);
 	let p = recognize(p);
-	let mut p = map(p, |s: &str| Node::String(s.into()));
+	let mut p = map(p, |s: &str| List::Leaf(Form::Id(s.into())));
 
 	p(input)
 }
@@ -95,7 +123,13 @@ fn p_num (input: &str) -> Result
 {
 	let p = digit1;
 	let p = recognize(p);
-	let p = map(p, |s: &str| Node::Number(s.parse().unwrap())); // map_res
+	let p = map(p, |s: &str|
+	{
+		let n = Literal::Number(s.parse().unwrap()); // map_res
+		let n = Form::Literal(n);
+		let n = List::Leaf(n);
+		n
+	});
 	let mut p = p;
 
 	p(input)

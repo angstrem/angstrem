@@ -22,6 +22,5 @@ fn main ()
 	let file  = File::open(filename).unwrap();
 	let input = BufReader::new(file);
 
-	let _node = parse(input);
-	// println!("{:#?}", node);
+	parse(input);
 }
