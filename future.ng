@@ -21,6 +21,7 @@ fn fact num
 
 ;	if (num `==` 0) 1
 ;	if (num :==: 0) 1
+;	if (num ^== 0) 1
 
 ;		{num * (fact {num - 1})}
 ;		{num * (fact {num - 1
