@@ -28,6 +28,8 @@ use nom::branch::alt;
 use nom::combinator::opt;
 use nom::combinator::recognize;
 use nom::combinator::map;
+use nom::combinator::rest;
+use nom::combinator::all_consuming;
 
 mod list;
 
@@ -74,10 +76,10 @@ pub fn parse (_input: impl BufRead)// -> List
 	*/
 	// .fold(parse_node_context, parse_node);
 
-	let foo = "\t\t A1 1 (B1? B2!) C-1 (D1 2";
+	let foo = "\t\t A1 1 (B1? B2!) C-1 (D1 2 ; abc def";
 
 	println!("{:#?}\n", foo);
-	println!("{:#?}", p_line(foo).unwrap());
+	println!("{:#?}", p_line(foo).unwrap().1);
 
 	// root
 }
@@ -89,6 +91,8 @@ fn p_line (input: &str) -> ResultOf<Line>
 		p_indent,
 		p_list_naked,
 	);
+	let p = terminated(p, opt(p_comment));
+	let p = all_consuming(p);
 	let p = map(p, |(depth, list)| Line { depth, list });
 	let mut p = p;
 
@@ -124,6 +128,15 @@ fn p_list (input: &str) -> Result
 		ws(p_list_naked),
 	);
 	let p = terminated(p, opt(tag(")")));
+	let mut p = p;
+
+	p(input)
+}
+
+fn p_comment (input: &str) -> ResultOf<()>
+{
+	let p = pair(tag(";"), rest);
+	let p = map(p, |_| ());
 	let mut p = p;
 
 	p(input)
