@@ -1,5 +1,6 @@
 // TODO: ? line trailing backslash
 // TODO: ? modes? lisp compat
+// TODO: multiline comment
 
 use std::io::BufRead;
 
@@ -22,6 +23,7 @@ use nom::sequence::delimited;
 use nom::sequence::terminated;
 
 use nom::sequence::pair;
+use nom::sequence::tuple;
 use nom::multi::many0;
 use nom::multi::separated_list0;
 
@@ -54,6 +56,7 @@ struct Line
 {
 	depth: usize,
 	list: List,
+	comment: String,
 }
 
 type List = list::List<Form>;
@@ -85,14 +88,14 @@ pub fn parse (input: impl BufRead) -> ()
 
 fn p_line (input: String) -> std::result::Result<Line, ()>
 {
-	let p = pair
-	(
+	let p = tuple
+	((
 		p_indent,
 		p_list_naked,
-	);
-	let p = terminated(p, opt(p_comment));
+		map(opt(p_comment), |comment| comment.map_or_else(|| "".into(), |s| s.into())),
+	));
+	let p = map(p, |(depth, list, comment)| Line { depth, list, comment });
 	let p = all_consuming(p);
-	let p = map(p, |(depth, list)| Line { depth, list });
 	let mut p = p;
 
 	match p(&input)
@@ -136,10 +139,9 @@ fn p_list (input: &str) -> Result
 	p(input)
 }
 
-fn p_comment (input: &str) -> ResultOf<()>
+fn p_comment (input: &str) -> ResultOf<&str>
 {
-	let p = pair(tag(";"), rest);
-	let p = map(p, |_| ());
+	let p = preceded(tag(";"), rest);
 	let mut p = p;
 
 	p(input)
