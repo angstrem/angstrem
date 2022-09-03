@@ -1,6 +1,7 @@
 // TODO: ? line trailing backslash
 // TODO: ? modes? lisp compat
 // TODO: multiline comment
+// TODO: Edge-Edge elim
 
 use std::io::BufRead;
 
@@ -57,6 +58,7 @@ pub enum Form
 #[derive(Debug)]
 struct Line
 {
+	line_no: usize,
 	depth: usize,
 	list: List,
 	comment: String,
@@ -75,12 +77,10 @@ pub fn parse (input: impl BufRead) -> List
 
 	let lines = input
 	.lines()
-	.map(|line| line.unwrap())
-	.filter(|line| line.len() > 0)
+	.enumerate()
+	.map(|(n, line)| (n, line.unwrap()))
+	.filter(|(_, line)| line.len() > 0)
 	.map(p_line);
-
-	let mut root = List::root();
-	let mut prev = None as Option<&mut List>;
 
 	#[derive(Debug)]
 	struct Frame <'L>
@@ -89,6 +89,8 @@ pub fn parse (input: impl BufRead) -> List
 		list: &'L mut List,
 	}
 
+	let mut root = List::root();
+	let mut prev = None as Option<&mut List>;
 	let mut stack = Stack::new(Frame { depth: 0, list: &mut root });
 
 	for next in lines
@@ -100,6 +102,8 @@ pub fn parse (input: impl BufRead) -> List
 			Err(_) => panic!("panic"), // TODO: on line N.
 			Ok(next) => next,
 		};
+
+		// if (next.list.is_empty()) { continue }
 
 		/*
 			>>>
@@ -131,22 +135,41 @@ pub fn parse (input: impl BufRead) -> List
 			===
 		*/
 
-		stack.head().list.concat(next.list);
+		// println!("{:?}", next);
+		let prev_list = stack.head().list.append(next.list);
+		let prev_list = unsafe
+		{
+			let r = (prev_list as *mut List);
+			(&mut * r)
+		};
+
+		prev = Some(prev_list);
 	}
 
-	stack.take();
+	// stack.take();
 	root
 }
 
-fn p_line (input: String) -> std::result::Result<Line, ()>
+fn p_line ((line_no, input): (usize, String)) -> std::result::Result<Line, ()>
 {
+	let line_no = (line_no + 1);
+
 	let p = tuple
 	((
 		p_indent,
 		p_list_naked,
 		map(opt(p_comment), |comment| comment.map_or_else(|| "".into(), |s| s.into())),
 	));
-	let p = map(p, |(depth, list, comment)| Line { depth, list, comment });
+	let p = map(p, |(depth, list, comment)|
+	{
+		Line
+		{
+			line_no,
+			depth,
+			list,
+			comment,
+		}
+	});
 	let p = all_consuming(p);
 	let mut p = p;
 

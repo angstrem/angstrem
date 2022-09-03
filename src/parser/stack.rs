@@ -27,9 +27,11 @@ impl <T> Stack<T>
 		self.stack.pop().expect("stack_pop_empty");
 	}
 
+	/*
 	pub fn take (mut self) -> T
 	{
 		assert!(self.stack.len() == 1, "stack_take_1");
 		self.stack.pop().unwrap()
 	}
+	*/
 }

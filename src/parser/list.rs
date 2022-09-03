@@ -18,15 +18,20 @@ impl <T> List<T>
 		List::Edge(list)
 	}
 
-	pub fn append (&mut self, item: Self)
+	pub fn append (&mut self, item: Self) -> &mut Self
 	{
 		match self
 		{
-			Self::Leaf(_)   => panic!("cannot_append_to_leaf"),
-			Self::Edge(vec) => vec.push(item),
+			Self::Leaf(_) => panic!("cannot_append_to_leaf"),
+			Self::Edge(vec) =>
+			{
+				vec.push(item);
+				vec.last_mut().unwrap()
+			},
 		}
 	}
 
+	/*
 	pub fn concat (&mut self, mut item: Self)
 	{
 		match &mut item
@@ -40,11 +45,23 @@ impl <T> List<T>
 			{
 				match edge.len()
 				{
-					0 => panic!("empty"),
+					0 => panic!("list_concat_empty"),
 					1 => self.append(edge.pop().unwrap()),
 					_ => self.append(item),
 				}
 			},
 		}
 	}
+	*/
+
+	/*
+	pub fn is_empty (&self) -> bool
+	{
+		match self
+		{
+			Self::Leaf(_) => panic!("list_is_empty_leaf"),
+			Self::Edge(edge) => edge.is_empty(),
+		}
+	}
+	*/
 }
