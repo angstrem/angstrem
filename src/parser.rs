@@ -36,8 +36,11 @@ use nom::combinator::all_consuming;
 
 mod list;
 
+mod stack;
+use stack::Stack;
+
 #[derive(Debug)]
-enum Literal
+pub enum Literal
 {
 	Number(i32),
 	// String(String),
@@ -45,7 +48,7 @@ enum Literal
 }
 
 #[derive(Debug)]
-enum Form
+pub enum Form
 {
 	Literal(Literal),
 	Id(String),
@@ -59,31 +62,80 @@ struct Line
 	comment: String,
 }
 
-type List = list::List<Form>;
+pub type List = list::List<Form>;
 
 type ResultOf <'S, T> = IResult<&'S str, T>;
 type Result <'S> = ResultOf<'S, List>;
 
-pub fn parse (input: impl BufRead) -> ()
+pub fn parse (input: impl BufRead) -> List
 {
+	// let foo = "\t\t A1 1 (B1? B2!) C-1 (D1 2 ; abc def".to_string();
+	// println!("{:#?}\n", foo);
+	// println!("{:#?}", p_line(foo).unwrap());
+
 	let lines = input
 	.lines()
 	.map(|line| line.unwrap())
 	.filter(|line| line.len() > 0)
 	.map(p_line);
-	// .collect();
-	// .fold(parse_node_context, parse_node);
 
-	// let foo = "\t\t A1 1 (B1? B2!) C-1 (D1 2 ; abc def".to_string();
-	// println!("{:#?}\n", foo);
-	// println!("{:#?}", p_line(foo).unwrap());
+	let mut root = List::root();
+	let mut prev = None as Option<&mut List>;
 
-	for line in lines
+	#[derive(Debug)]
+	struct Frame <'L>
 	{
-		println!("{:#?}", line);
+		depth: usize,
+		list: &'L mut List,
 	}
 
-	// println!("{},\n {:#?}", lines.len(), lines);
+	let mut stack = Stack::new(Frame { depth: 0, list: &mut root });
+
+	for next in lines
+	{
+		// println!("{:#?}", if let List::Edge(edge) = next.unwrap().list { edge.len() } else { 0 });
+
+		let next = match next
+		{
+			Err(_) => panic!("panic"), // TODO: on line N.
+			Ok(next) => next,
+		};
+
+		/*
+			>>>
+		*/
+		if (next.depth > stack.head().depth)
+		{
+			match prev.take()
+			{
+				None => {},
+				Some(prev) =>
+				{
+					stack.push(Frame { depth: next.depth, list: prev });
+				}
+			}
+		}
+		/*
+			<<<
+		*/
+		else
+		{
+			while (next.depth < stack.head().depth)
+			{
+				stack.pop()
+			}
+
+			assert!(next.depth == stack.head().depth, "incorrect_nesting_pop, LINE {}", 0); // TODO: line
+		}
+		/*
+			===
+		*/
+
+		stack.head().list.concat(next.list);
+	}
+
+	stack.take();
+	root
 }
 
 fn p_line (input: String) -> std::result::Result<Line, ()>
