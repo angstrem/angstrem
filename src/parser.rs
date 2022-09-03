@@ -1,7 +1,8 @@
 // TODO: ? line trailing backslash
 // TODO: ? modes? lisp compat
 // TODO: multiline comment
-// TODO: Edge-Edge elim
+// TODO: Edge-[1] Edge/Leaf elim
+// TODO: empty Edge // if (next.list.is_empty()) { continue }
 
 use std::io::BufRead;
 
@@ -71,10 +72,6 @@ type Result <'S> = ResultOf<'S, List>;
 
 pub fn parse (input: impl BufRead) -> List
 {
-	// let foo = "\t\t A1 1 (B1? B2!) C-1 (D1 2 ; abc def".to_string();
-	// println!("{:#?}\n", foo);
-	// println!("{:#?}", p_line(foo).unwrap());
-
 	let lines = input
 	.lines()
 	.enumerate()
@@ -95,15 +92,11 @@ pub fn parse (input: impl BufRead) -> List
 
 	for next in lines
 	{
-		// println!("{:#?}", if let List::Edge(edge) = next.unwrap().list { edge.len() } else { 0 });
-
 		let next = match next
 		{
 			Err(_) => panic!("panic"), // TODO: on line N.
 			Ok(next) => next,
 		};
-
-		// if (next.list.is_empty()) { continue }
 
 		/*
 			>>>
@@ -135,7 +128,6 @@ pub fn parse (input: impl BufRead) -> List
 			===
 		*/
 
-		// println!("{:?}", next);
 		let prev_list = stack.head().list.append(next.list);
 		let prev_list = unsafe
 		{
@@ -146,7 +138,6 @@ pub fn parse (input: impl BufRead) -> List
 		prev = Some(prev_list);
 	}
 
-	// stack.take();
 	root
 }
 
