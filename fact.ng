@@ -1,7 +1,7 @@
 
-fn main
-	; print (fact 5)
+1
+	2
 
-	-> 5
-		fact
-		print
+	(3)
+
+	4 ((5))

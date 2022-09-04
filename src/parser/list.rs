@@ -31,6 +31,41 @@ impl <T> List<T>
 		}
 	}
 
+	pub fn visit <F> (&mut self, fn_visit: &mut F)
+		where F: FnMut(&mut Self)
+	{
+		match self
+		{
+			Self::Leaf(_) =>
+			{
+				fn_visit(self);
+			},
+			Self::Edge(edge) =>
+			{
+				for item in edge
+				{
+					item.visit(fn_visit);
+				}
+
+				fn_visit(self);
+			},
+		}
+	}
+
+	pub fn visit_top <F> (&mut self, fn_visit: &mut F)
+		where F: FnMut(&mut Self)
+	{
+		fn_visit(self);
+
+		if let Self::Edge(edge) = self
+		{
+			for item in edge
+			{
+				item.visit_top(fn_visit);
+			}
+		}
+	}
+
 	/*
 	pub fn concat (&mut self, mut item: Self)
 	{
@@ -54,14 +89,12 @@ impl <T> List<T>
 	}
 	*/
 
-	/*
-	pub fn is_empty (&self) -> bool
+	pub fn is_edge_empty (&self) -> bool
 	{
 		match self
 		{
-			Self::Leaf(_) => panic!("list_is_empty_leaf"),
+			Self::Leaf(_) => false,
 			Self::Edge(edge) => edge.is_empty(),
 		}
 	}
-	*/
 }

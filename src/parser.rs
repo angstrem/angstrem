@@ -138,6 +138,41 @@ pub fn parse (input: impl BufRead) -> List
 		prev = Some(prev_list);
 	}
 
+	root.visit_top(&mut |item|
+	{
+		if let List::Edge(edge) = item
+		{
+			edge.retain(|item| ! item.is_edge_empty());
+		}
+	});
+
+	/*
+	root.visit_top(&mut |item|
+	{
+		if let List::Edge(edge) = item
+		{
+			println!("{}; {:?}; {}", edge.len(), edge, edge[0].is_edge_edge());
+			return;
+			if (edge.len() != 1) { return }
+
+			if let List::Leaf(_) = edge.last().unwrap()
+			{
+				let leaf = edge.pop().unwrap();
+				*item = leaf;
+
+				// println!("{}; {:?}", edge.len(), leaf);
+			}
+		}
+	});
+	*/
+
+	/*
+	root.visit(&mut |item|
+	{
+		println!("{:?}", item);
+	});
+	*/
+
 	root
 }
 
