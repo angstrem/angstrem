@@ -59,6 +59,7 @@ impl <T> List<T>
 		}
 	}
 
+	/*
 	pub fn visit <F> (&mut self, fn_visit: &mut F)
 		where F: FnMut(&mut Self)
 	{
@@ -93,6 +94,7 @@ impl <T> List<T>
 			}
 		}
 	}
+	*/
 
 	pub fn is_edge_empty (&self) -> bool
 	{
