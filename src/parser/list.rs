@@ -1,4 +1,6 @@
 
+use std::mem::replace;
+
 #[derive(Debug)]
 pub enum List <T>
 {
@@ -22,11 +24,37 @@ impl <T> List<T>
 	{
 		match self
 		{
-			Self::Leaf(_) => panic!("cannot_append_to_leaf"),
+			Self::Leaf(_) =>
+			{
+				let leaf = replace(self, Self::root());
+				self.append(leaf);
+				self.append(item)
+			},
 			Self::Edge(vec) =>
 			{
 				vec.push(item);
 				vec.last_mut().unwrap()
+			},
+		}
+	}
+
+	pub fn concat (&mut self, mut item: Self) -> &mut Self
+	{
+		match item
+		{
+			Self::Leaf(_) =>
+			{
+				// self.append(item);
+				panic!("list_concat_leaf")
+			},
+			Self::Edge(ref mut edge) =>
+			{
+				match edge.len()
+				{
+					0 => panic!("list_concat_empty"),
+					1 => self.append(edge.pop().unwrap()),
+					_ => self.append(item),
+				}
 			},
 		}
 	}
@@ -65,29 +93,6 @@ impl <T> List<T>
 			}
 		}
 	}
-
-	/*
-	pub fn concat (&mut self, mut item: Self)
-	{
-		match &mut item
-		{
-			Self::Leaf(_) =>
-			{
-				// self.append(item);
-				panic!("list_concat_leaf");
-			},
-			Self::Edge(edge) =>
-			{
-				match edge.len()
-				{
-					0 => panic!("list_concat_empty"),
-					1 => self.append(edge.pop().unwrap()),
-					_ => self.append(item),
-				}
-			},
-		}
-	}
-	*/
 
 	pub fn is_edge_empty (&self) -> bool
 	{

@@ -128,7 +128,8 @@ pub fn parse (input: impl BufRead) -> List
 			===
 		*/
 
-		let prev_list = stack.head().list.append(next.list);
+		let prev_list = stack.head().list.concat(next.list);
+
 		let prev_list = unsafe
 		{
 			let r = (prev_list as *mut List);
