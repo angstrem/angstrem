@@ -23,5 +23,16 @@ fn main ()
 	let input = BufReader::new(file);
 
 	let root = parse(input);
-	println!("{:#?}", root);
+
+	match root
+	{
+		Ok(list) =>
+		{
+			println!("{:#?}", list);
+		},
+		Err(error) =>
+		{
+			println!("{}", error);
+		}
+	}
 }

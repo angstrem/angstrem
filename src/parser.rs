@@ -70,7 +70,8 @@ pub type List = list::List<Form>;
 type ResultOf <'S, T> = IResult<&'S str, T>;
 type Result <'S> = ResultOf<'S, List>;
 
-pub fn parse (input: impl BufRead) -> List
+pub fn parse (input: impl BufRead)
+ -> std::result::Result<List, nom::Err<nom::error::Error<usize>>>
 {
 	let lines = input
 	.lines()
@@ -92,11 +93,7 @@ pub fn parse (input: impl BufRead) -> List
 
 	for next in lines
 	{
-		let next = match next
-		{
-			Err(_) => panic!("panic"), // TODO: on line N.
-			Ok(next) => next,
-		};
+		let next = next?;
 
 		if (next.list.is_edge_empty())
 		{
@@ -127,7 +124,7 @@ pub fn parse (input: impl BufRead) -> List
 				stack.pop()
 			}
 
-			assert!(next.depth == stack.head().depth, "incorrect_nesting_pop, LINE {}", 0); // TODO: line
+			assert!(next.depth == stack.head().depth, "incorrect_nesting_pop, LINE {}", next.line_no);
 		}
 		/*
 			===
@@ -145,10 +142,11 @@ pub fn parse (input: impl BufRead) -> List
 		prev = Some(prev_list);
 	}
 
-	root
+	Ok(root)
 }
 
-fn p_line ((line_no, input): (usize, String)) -> std::result::Result<Line, ()>
+fn p_line ((line_no, input): (usize, String))
+ -> std::result::Result<Line, nom::Err<nom::error::Error<usize>>>
 {
 	let line_no = (line_no + 1);
 
@@ -171,11 +169,9 @@ fn p_line ((line_no, input): (usize, String)) -> std::result::Result<Line, ()>
 	let p = all_consuming(p);
 	let mut p = p;
 
-	match p(&input)
-	{
-		Err(_) => Err(()), // TODO: Err
-		Ok((_, line)) => Ok(line),
-	}
+	p(&input)
+	.map(|(_, line)| line)
+	.map_err(|err| err.map_input(|_| line_no))
 }
 
 fn p_indent (input: &str) -> ResultOf<usize>
