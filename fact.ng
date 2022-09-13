@@ -2,6 +2,6 @@
 fn main
 	; print (fact 5)
 
-	{ 5 ->
+	5 ->
 		fact
 		print

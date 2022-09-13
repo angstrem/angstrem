@@ -1,8 +1,6 @@
 // TODO: ? line trailing backslash
 // TODO: ? modes? lisp compat
 // TODO: multiline comment
-// TODO: Edge-[1] Edge/Leaf elim
-// TODO: empty Edge // if (next.list.is_empty()) { continue }
 
 use std::io::BufRead;
 
