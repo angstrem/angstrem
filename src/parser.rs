@@ -34,7 +34,7 @@ use nom::combinator::map;
 use nom::combinator::rest;
 use nom::combinator::all_consuming;
 
-mod list;
+mod tree;
 
 mod stack;
 use stack::Stack;
@@ -59,17 +59,17 @@ struct Line
 {
 	line_no: usize,
 	depth: usize,
-	list: List,
+	tree: Tree,
 	comment: String,
 }
 
-pub type List = list::List<Form>;
+pub type Tree = tree::Tree<Form>;
 
 type ResultOf <'S, T> = IResult<&'S str, T>;
-type Result <'S> = ResultOf<'S, List>;
+type Result <'S> = ResultOf<'S, Tree>;
 
 pub fn parse (input: impl BufRead)
- -> std::result::Result<List, nom::Err<nom::error::Error<usize>>>
+ -> std::result::Result<Tree, nom::Err<nom::error::Error<usize>>>
 {
 	let lines = input
 	.lines()
@@ -82,18 +82,18 @@ pub fn parse (input: impl BufRead)
 	struct Frame <'L>
 	{
 		depth: usize,
-		list: &'L mut List,
+		tree: &'L mut Tree,
 	}
 
-	let mut root = List::root();
-	let mut prev = None as Option<&mut List>;
-	let mut stack = Stack::new(Frame { depth: 0, list: &mut root });
+	let mut root = Tree::root();
+	let mut prev = None as Option<&mut Tree>;
+	let mut stack = Stack::new(Frame { depth: 0, tree: &mut root });
 
-	for next in lines
+	for line in lines
 	{
-		let next = next?;
+		let line = line?;
 
-		if (next.list.is_edge_empty())
+		if (is_tree_empty(&line.tree))
 		{
 			continue
 		}
@@ -101,14 +101,14 @@ pub fn parse (input: impl BufRead)
 		/*
 			>>>
 		*/
-		if (next.depth > stack.head().depth)
+		if (line.depth > stack.head().depth)
 		{
 			match prev.take()
 			{
 				None => {},
 				Some(prev) =>
 				{
-					stack.push(Frame { depth: next.depth, list: prev });
+					stack.push(Frame { depth: line.depth, tree: prev });
 				}
 			}
 		}
@@ -117,27 +117,27 @@ pub fn parse (input: impl BufRead)
 		*/
 		else
 		{
-			while (next.depth < stack.head().depth)
+			while (line.depth < stack.head().depth)
 			{
 				stack.pop()
 			}
 
-			assert!(next.depth == stack.head().depth, "incorrect_nesting_pop, LINE {}", next.line_no);
+			assert!(line.depth == stack.head().depth, "incorrect_nesting_pop, LINE {}", line.line_no);
 		}
 		/*
 			===
 		*/
 
-		// println!("{:?};{:?}", stack.head().list, next.list);
-		let prev_list = stack.head().list.concat(next.list);
+		// println!("{:?};{:?}", stack.head().tree, line.tree);
+		let prev_tree = stack.head().tree.concat(line.tree);
 
-		let prev_list = unsafe
+		let prev_tree = unsafe
 		{
-			let r = (prev_list as *mut List);
+			let r = (prev_tree as *mut Tree);
 			(&mut * r)
 		};
 
-		prev = Some(prev_list);
+		prev = Some(prev_tree);
 	}
 
 	Ok(root)
@@ -154,13 +154,13 @@ fn p_line ((line_no, input): (usize, String))
 		p_list_naked,
 		map(opt(p_comment), |comment| comment.map_or_else(|| "".into(), |s| s.into())),
 	));
-	let p = map(p, |(depth, list, comment)|
+	let p = map(p, |(depth, tree, comment)|
 	{
 		Line
 		{
 			line_no,
 			depth,
-			list,
+			tree,
 			comment,
 		}
 	});
@@ -217,7 +217,7 @@ fn p_comment (input: &str) -> ResultOf<&str>
 fn p_list_naked (input: &str) -> Result
 {
 	let p = separated_list0(space1, p_form);
-	let mut p = map(p, List::from_vec);
+	let mut p = map(p, Tree::Branch);
 
 	p(input)
 }
@@ -231,7 +231,7 @@ fn p_id (input: &str) -> Result
 		many0(alt((alphanumeric1, recognize(one_of(whitelist))))),
 	);
 	let p = recognize(p);
-	let mut p = map(p, |s: &str| List::Leaf(Form::Id(s.into())));
+	let mut p = map(p, |s: &str| Tree::Leaf(Form::Id(s.into())));
 
 	p(input)
 }
@@ -244,7 +244,7 @@ fn p_num (input: &str) -> Result
 	{
 		let n = Literal::Number(s.parse().unwrap()); // map_res
 		let n = Form::Literal(n);
-		let n = List::Leaf(n);
+		let n = Tree::Leaf(n);
 		n
 	});
 	let mut p = p;
@@ -264,4 +264,13 @@ fn ws <'a, F: 'a, O, E> (inner: F)
 		inner,
 		space0,
 	)
+}
+
+fn is_tree_empty (tree: &Tree) -> bool
+{
+	match tree
+	{
+		Tree::Leaf(_) => panic!(),
+		Tree::Branch(vec) => vec.is_empty(),
+	}
 }

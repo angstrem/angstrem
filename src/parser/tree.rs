@@ -2,22 +2,17 @@
 use std::mem::replace;
 
 #[derive(Debug)]
-pub enum List <T>
+pub enum Tree <T>
 {
 	Leaf(T),
-	Edge(Vec<Self>),
+	Branch(Vec<Self>),
 }
 
-impl <T> List<T>
+impl <T> Tree<T>
 {
 	pub fn root () -> Self
 	{
-		List::Edge(Vec::new())
-	}
-
-	pub fn from_vec (list: Vec<Self>) -> Self
-	{
-		List::Edge(list)
+		Tree::Branch(Vec::new())
 	}
 
 	pub fn append (&mut self, item: Self) -> &mut Self
@@ -30,7 +25,7 @@ impl <T> List<T>
 				self.append(leaf);
 				self.append(item)
 			},
-			Self::Edge(vec) =>
+			Self::Branch(vec) =>
 			{
 				vec.push(item);
 				vec.last_mut().unwrap()
@@ -44,20 +39,22 @@ impl <T> List<T>
 		{
 			Self::Leaf(_) =>
 			{
-				// self.append(item);
-				panic!("list_concat_leaf")
+				/* self.append(item); */
+				panic!("tree_concat_to_leaf")
 			},
-			Self::Edge(ref mut edge) =>
+			Self::Branch(ref mut edge) =>
 			{
 				match edge.len()
 				{
-					0 => panic!("list_concat_empty"),
+					0 => panic!("tree_concat_empty_branch"),
 					1 => self.append(edge.pop().unwrap()),
 					_ => self.append(item),
 				}
 			},
 		}
 	}
+}
+
 
 	/*
 	pub fn visit <F> (&mut self, fn_visit: &mut F)
@@ -95,13 +92,3 @@ impl <T> List<T>
 		}
 	}
 	*/
-
-	pub fn is_edge_empty (&self) -> bool
-	{
-		match self
-		{
-			Self::Leaf(_) => false,
-			Self::Edge(edge) => edge.is_empty(),
-		}
-	}
-}

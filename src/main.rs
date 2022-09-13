@@ -26,9 +26,9 @@ fn main ()
 
 	match root
 	{
-		Ok(list) =>
+		Ok(tree) =>
 		{
-			println!("{:#?}", list);
+			println!("{:#?}", tree);
 		},
 		Err(error) =>
 		{
