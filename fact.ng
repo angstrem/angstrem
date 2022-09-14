@@ -2,10 +2,15 @@
 fn main
 	; print (fact 5)
 
+	[ 1 2 3 ]
+
 	if #t
 		"foo \t bar"
 		"\n"
 
-	( 5 ->
-		fact
+	{ 5 ->
 		print
+
+fn fact num
+	if {num == 0} 1
+		{num * (fact {num - 1

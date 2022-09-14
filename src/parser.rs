@@ -51,10 +51,18 @@ pub enum Literal
 }
 
 #[derive(Debug)]
+pub enum Special
+{
+	Square,
+	Curly,
+}
+
+#[derive(Debug)]
 pub enum Form
 {
 	Literal(Literal),
 	Id(String),
+	Special(Special),
 }
 
 #[derive(Debug)]
@@ -174,6 +182,14 @@ fn p_line ((line_no, input): (usize, String))
 	.map_err(|err| err.map_input(|_| line_no))
 }
 
+fn p_comment (input: &str) -> ResultOf<&str>
+{
+	let p = preceded(tag(";"), rest);
+	let mut p = p;
+
+	p(input)
+}
+
 fn p_indent (input: &str) -> ResultOf<usize>
 {
 	let p = space0;
@@ -198,23 +214,47 @@ fn p_form (input: &str) -> Result
 
 fn p_list (input: &str) -> Result
 {
-	let p = preceded
-	(
-		tag("("),
-		ws(p_list_naked),
-	);
-	let p = terminated(p, opt(tag(")")));
+	let p_list_round = p_list_qualified("(", ")");
+
+	let p_list_square = p_list_qualified("[", "]");
+	let p_list_square = map(p_list_square, |mut tree|
+	{
+		tree.prepend(Tree::Leaf(Form::Special(Special::Square)));
+		tree
+	});
+
+	let p_list_curly = p_list_qualified("{", "}");
+	let p_list_curly = map(p_list_curly, |mut tree|
+	{
+		tree.prepend(Tree::Leaf(Form::Special(Special::Curly)));
+		tree
+	});
+
+	let p = alt
+	((
+		p_list_round,
+		p_list_square,
+		p_list_curly,
+	));
 	let mut p = p;
 
 	p(input)
 }
 
-fn p_comment (input: &str) -> ResultOf<&str>
+fn p_list_qualified (open: &'static str, close: &'static str) -> impl FnMut(&str) -> Result
 {
-	let p = preceded(tag(";"), rest);
-	let mut p = p;
+	move |input|
+	{
+		let p = preceded
+		(
+			tag(open),
+			ws(p_list_naked),
+		);
+		let p = terminated(p, opt(tag(close)));
+		let mut p = p;
 
-	p(input)
+		p(input)
+	}
 }
 
 fn p_list_naked (input: &str) -> Result

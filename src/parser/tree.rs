@@ -15,6 +15,18 @@ impl <T> Tree<T>
 		Tree::Branch(Vec::new())
 	}
 
+	pub fn prepend (&mut self, item: Self)
+	{
+		match self
+		{
+			Self::Leaf(_) => panic!("tree_prepend_to_leaf"),
+			Self::Branch(vec) =>
+			{
+				vec.splice(0..0, [ item ]);
+			},
+		}
+	}
+
 	pub fn append (&mut self, item: Self) -> &mut Self
 	{
 		match self
