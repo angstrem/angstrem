@@ -9,6 +9,7 @@ use nom::error::ParseError;
 // use nom::error::Error;
 // use nom::Err;
 
+use nom::character::complete::char;
 use nom::character::complete::space0;
 use nom::character::complete::space1;
 use nom::character::complete::alpha1;
@@ -17,6 +18,7 @@ use nom::character::complete::digit1;
 use nom::character::complete::one_of;
 
 use nom::bytes::complete::tag;
+use nom::bytes::complete::is_not;
 
 use nom::sequence::preceded;
 use nom::sequence::delimited;
@@ -26,11 +28,13 @@ use nom::sequence::pair;
 use nom::sequence::tuple;
 use nom::multi::many0;
 use nom::multi::separated_list0;
+use nom::multi::fold_many0;
 
 use nom::branch::alt;
 use nom::combinator::opt;
 use nom::combinator::recognize;
 use nom::combinator::map;
+use nom::combinator::verify;
 use nom::combinator::rest;
 use nom::combinator::all_consuming;
 
@@ -43,8 +47,7 @@ use stack::Stack;
 pub enum Literal
 {
 	Number(i32),
-	// String(String),
-	// Boolean(bool),
+	String(String),
 }
 
 #[derive(Debug)]
@@ -128,7 +131,6 @@ pub fn parse (input: impl BufRead)
 			===
 		*/
 
-		// println!("{:?};{:?}", stack.head().tree, line.tree);
 		let prev_tree = stack.head().tree.concat(line.tree);
 
 		let prev_tree = unsafe
@@ -187,6 +189,7 @@ fn p_form (input: &str) -> Result
 		p_list,
 		p_id,
 		p_num,
+		p_str,
 	));
 	let mut p = p;
 
@@ -246,6 +249,57 @@ fn p_num (input: &str) -> Result
 		let n = Form::Literal(n);
 		let n = Tree::Leaf(n);
 		n
+	});
+	let mut p = p;
+
+	p(input)
+}
+
+fn p_str (input: &str) -> Result
+{
+	let escape_list = one_of("\"\\nrt");
+	let escape = preceded(tag("\\"), escape_list);
+	let escape = map(escape, |c|
+	{
+		match c
+		{
+			'\\' => '\\'.to_string(),
+			 '"' =>  '"'.to_string(),
+			 'n' => "\n".to_string(),
+			 'r' => "\r".to_string(),
+			 't' => "\t".to_string(),
+			_ => panic!(),
+		}
+	});
+
+	let literal = is_not("\"\\");
+	let literal = verify(literal, |s: &str| (! s.is_empty()));
+	let literal = map(literal, |s: &str| s.to_string());
+
+	let fragment = alt
+	((
+		escape,
+		literal,
+	));
+
+	let contents = fold_many0
+	(
+		fragment,
+		String::new,
+		|mut total, s|
+		{
+			total.push_str(&s);
+			total
+		},
+	);
+
+	let p = delimited(char('"'), contents, char('"'));
+	let p = map(p, |s|
+	{
+		let s = Literal::String(s);
+		let s = Form::Literal(s);
+		let s = Tree::Leaf(s);
+		s
 	});
 	let mut p = p;
 

@@ -2,6 +2,10 @@
 fn main
 	; print (fact 5)
 
-	5 ->
+	if #t
+		"foo \t bar"
+		"\n"
+
+	( 5 ->
 		fact
 		print
